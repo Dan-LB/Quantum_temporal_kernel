@@ -1,0 +1,5 @@
+Experiment: BAYESIAN_HAMILTONIAN
+Encoding: euler
+Number of Qubits: 2
+Sparsity Coefficient: 0.95
+OPT_TIMES: 30

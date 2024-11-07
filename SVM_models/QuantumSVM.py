@@ -47,9 +47,12 @@ class QuantumSVM(BaseEstimator, ClassifierMixin):
     def generate__H(self):
         """Generates a random Hamiltonian for the given number of qubits by combining Pauli matrices."""
         pauli_matrices = [I, X, Y, Z]
-        if self.Hamiltonian_c == None:
+        if self.Hamiltonian_c is None:
             print("\nGenerating random coefficients for the Hamiltonian...")
             coefficients = np.random.rand(4**self.n_qubits)
+            self.Hamiltonian_c = coefficients
+            
+        coefficients = self.Hamiltonian_c
         H = None
         for i in range(4**self.n_qubits):
             indices = np.unravel_index(i, (4,) * self.n_qubits)
@@ -71,7 +74,12 @@ class QuantumSVM(BaseEstimator, ClassifierMixin):
         alphas = np.maximum(self.hidden_alphas-self.sparsity_coefficient, 0)/(1-self.sparsity_coefficient)
         print(f"Non-zero alphas: {np.count_nonzero(alphas)}")
         
-        assert np.sum(alphas) != 0, "All alphas are zero. Please adjust the sparsity coefficient."
+        while np.sum(alphas) == 0:
+            print("All alphas are zero. Regenerating...")
+            self.hidden_alphas /= max(self.hidden_alphas)
+            alphas = np.maximum(self.hidden_alphas-self.sparsity_coefficient, 0)/(1-self.sparsity_coefficient)
+            print(f"Non-zero alphas: {np.count_nonzero(alphas)}")
+
         alphas = alphas / np.sum(alphas)
         self.alphas = alphas
 

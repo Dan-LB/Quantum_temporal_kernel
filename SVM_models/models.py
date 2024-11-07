@@ -85,22 +85,28 @@ def evaluate_OneClassSVM_custom(kernel_dict, print_results=False):
     return results_dict
 
 # New function for binary classification with standard kernel
-def evaluate_binary_SVM_standard(train, test, train_labels, test_labels, kernel_code, print_results=False):
+def evaluate_binary_SVM_standard(train, validation, test, train_labels, validation_labels, test_labels, kernel_code, print_results=False):
     assert kernel_code in KERNELS, f"Invalid kernel code: {kernel_code}"
 
     binary_svm = SVC(kernel=kernel_code)
     binary_svm.fit(train, train_labels)
+
     train_predictions = binary_svm.predict(train)
+    validation_predictions = binary_svm.predict(validation)
     test_predictions = binary_svm.predict(test)
+    
     train_accuracy = accuracy_score(train_labels, train_predictions)
+    validation_accuracy = accuracy_score(validation_labels, validation_predictions)
     test_accuracy = accuracy_score(test_labels, test_predictions)
 
     if print_results:
         print(f"Train accuracy: {train_accuracy}")
+        print(f"Validation accuracy: {validation_accuracy}")
         print(f"Test accuracy: {test_accuracy}")
 
     return {
         "train_accuracy": train_accuracy,
+        "validation_accuracy": validation_accuracy,
         "test_accuracy": test_accuracy
     }
 

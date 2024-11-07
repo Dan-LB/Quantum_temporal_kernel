@@ -1,0 +1,5 @@
+Experiment: Classical
+Encoding: linear
+Number of Qubits: 2
+Sparsity Coefficient: 0.95
+OPT_TIMES: 30
